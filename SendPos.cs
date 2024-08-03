@@ -1,16 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class SendPos : MonoBehaviour
+public class WebGLCommunication : MonoBehaviour
 {
-    // Start is called before the first frame update
-   async void Start()
+    private Mov controlledObject;
+
+    void Start()
     {
-        var webViewPrefab = GameObject.Find("WebViewPrefab").GetComponent<WebViewPrefab>();
-        await webViewPrefab.WaitUntilInitialized();
-        webViewPrefab.WebView.MessageEmitted += (sender, eventArgs) => {
-            Debug.Log("JSON received: " + eventArgs.Value);
-        };
-    } 
+        controlledObject = FindObjectOfType<Mov>();
+    }
+
+    public void OnMessage(string message)
+    {
+        // Parsear el mensaje y actualizar la posición del objeto
+        string[] parts = message.Split(',');
+        if (parts.Length == 3 && parts[0] == "cursor")
+        {
+            float x = float.Parse(parts[1]);
+            float y = float.Parse(parts[2]);
+            controlledObject.SetTargetPosition(x, y);
+        }
+    }
 }
+

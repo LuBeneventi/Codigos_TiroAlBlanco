@@ -1,59 +1,27 @@
-using System;
-using System.Runtime.InteropServices;
 using UnityEngine;
 
 public class Mov : MonoBehaviour
 {
-    public GameObject hitMarker;
+    private Vector3 targetPosition;
 
-    
     void Start()
     {
-        
-        if (hitMarker == null)
-        {
-            Debug.LogError("HitMarker GameObject is not assigned.");
-        }
+        // Inicializar la posición del objeto
+        targetPosition = transform.position;
     }
 
-   
     void Update()
     {
-        
-
+        // Interpolar la posición del objeto hacia la posición objetivo
+        transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 10);
     }
 
-    void OnMessage(string message)
+    public void SetTargetPosition(float x, float y)
     {
-        
-        var data = JsonUtility.FromJson<MessageData>(message);
-
-        
-        if (data.type == "cursor")
-        {
-            
-            UpdateHitMarkerPosition(data.x, data.y);
-        }
+        // Convertir las coordenadas de la pantalla a coordenadas del mundo
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(x, y, Camera.main.nearClipPlane));
+        targetPosition = new Vector3(worldPosition.x, worldPosition.y, transform.position.z);
     }
-
-    void UpdateHitMarkerPosition(float x, float y)
-    {
-       
-        Vector3 screenPosition = new Vector3(x, y, Camera.main.nearClipPlane);
-        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-
-        
-        hitMarker.transform.position = worldPosition;
-    }
-}
-
-
-[System.Serializable]
-public class MessageData
-{
-    public string type;
-    public float x;
-    public float y;
 }
 
 
