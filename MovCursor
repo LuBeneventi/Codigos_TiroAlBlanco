@@ -1,21 +1,17 @@
 using UnityEngine;
 
-public class FollowCustomCursor : MonoBehaviour
+public class MovCursor : MonoBehaviour
 {
     private Vector3 cursorPosition;
 
     void Start()
     {
-        // Inicialización si es necesaria
+        
     }
-
     void Update()
     {
-        // Mover el objeto a la posición del cursor cada frame
         transform.position = cursorPosition;
     }
-
-    // Este método se invoca cuando se recibe un mensaje desde el navegador
     public void OnMessageReceived(string message)
     {
         Debug.Log("Message received: " + message);
